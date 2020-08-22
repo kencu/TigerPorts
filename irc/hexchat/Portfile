@@ -2,9 +2,13 @@
 # $Id: Portfile 153435 2016-09-30 05:30:04Z ionic@macports.org $
 
 PortSystem          1.0
+PortGroup           old_openssl 1.0
+
+openssl.configure   build_flags
 
 name                hexchat
 version             2.12.1
+revision            1
 set branch          [join [lrange [split ${version} .] 0 1] .]
 categories          irc
 maintainers         raimue \
@@ -71,6 +75,7 @@ platform darwin 8 {
     post-configure {
          reinplace "s|-fPIE||g" ${worksrcpath}/Makefile
          reinplace "s|-fPIE||g" ${worksrcpath}/src/common/Makefile
+         reinplace "s|-fPIE||g" ${worksrcpath}/src/common/dbus/Makefile
     }
 }
 
