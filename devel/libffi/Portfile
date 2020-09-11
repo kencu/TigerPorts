@@ -55,6 +55,10 @@ lappend merger_dont_diff \
     ${prefix}/lib/libffi-${version}/include/ffi.h \
     ${prefix}/lib/libffi-${version}/include/ffitarget.h
 
+depends_test-append port:expect port:dejagnu
+test.run            yes
+test.target         check
+
 livecheck.url       ftp://sourceware.org/pub/libffi/
 livecheck.type      regex
 livecheck.regex     ${name}-(\\d+(?:\\.\\d+)+)${extract.suffix}
