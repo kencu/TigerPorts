@@ -1,0 +1,18 @@
+--- Makefile.orig	2020-10-10 18:40:50.000000000 -0700
++++ Makefile	2020-10-10 18:42:23.000000000 -0700
+@@ -68,12 +68,14 @@
+ 	LDFLAGS += -isysroot $(SDK)
+ endif
+ 
++OBJCFLAGS = $(CFLAGS)
++
+ .PHONY: all target clean dist test help beautify
+ 
+ all: target makeicns
+ 
+ makeicns: makeicns.o IconFamily.o NSString+CarbonFSRefCreation.o 
+-	$(CXX) -o $@ $^ $(LDFLAGS)
++	$(CXX) $(OBJCFLAGS) -o $@ $^ $(LDFLAGS)
+ 
+ target:
+ 	@echo "Building makeicns $(VERSION) for Mac OS X $(BUILD_SYSTEM) system"
