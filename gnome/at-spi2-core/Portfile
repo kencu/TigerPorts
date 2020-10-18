@@ -44,7 +44,7 @@ configure.args      -Ddocs=true \
 
 platform darwin 8 {
     # the gnome document scanner currently is not happy about our meson edits
-    configure.args-replace configure.args -Ddocs=true -Ddocs=false
+    configure.args-replace -Ddocs=true -Ddocs=false
 }
 
 # uses g-ir-scanner, which uses $CC from env
