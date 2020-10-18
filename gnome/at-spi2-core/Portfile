@@ -6,8 +6,7 @@ PortGroup           muniversal 1.0
 
 name                at-spi2-core
 # you probably want to keep this at the same version as at-spi2-atk
-version             2.28.0
-revision            1
+version             2.38.0
 
 license             LGPL
 set branch          [join [lrange [split ${version} .] 0 1] .]
@@ -23,27 +22,32 @@ master_sites        gnome:sources/${name}/${branch}/
 
 use_xz              yes
 
-checksums           rmd160  34cc6c2eb570617c05f0f4141ec03501a11a1caa \
-                    sha256  42a2487ab11ce43c288e73b2668ef8b1ab40a0e2b4f94e80fca04ad27b6f1c87 \
-                    size    186676
+checksums           rmd160  0dbb814bd39676adb7484742ed0944f7bdda07a3 \
+                    sha256  84e36c3fe66862133f5fe229772b76aa2526e10de5014a3778f2fa46ce550da5 \
+                    size    190540
 
 depends_build-append \
-                    port:pkgconfig
+                    port:pkgconfig \
+                    port:gettext \
+                    port:gtk-doc
 
 depends_lib         path:lib/pkgconfig/glib-2.0.pc:glib2 \
                     port:dbus \
                     port:gobject-introspection \
                     port:xorg-libX11 \
                     port:xorg-libXi \
-                    port:xorg-libXtst \
-                    port:xorg-libice \
-                    port:xorg-libsm
+                    port:xorg-libXtst
 
-patchfiles          remove-spurious-gtk-doc-markers.patch
+configure.args      -Ddocs=true \
+                    -Dintrospection=yes \
+                    -Dx11=yes
 
-configure.args      -Denable-introspection=yes
+platform darwin 8 {
+    # the gnome document scanner currently is not happy about our meson edits
+    configure.args-replace configure.args -Ddocs=true -Ddocs=false
+}
 
-# gobject-introspection uses g-ir-scanner, which uses $CC from env
+# uses g-ir-scanner, which uses $CC from env
 if {[variant_isset universal]} {
     foreach arch ${configure.universal_archs} {
         lappend merger_build_env(${arch})  "CC=${configure.cc} -arch ${arch}"
@@ -52,15 +56,6 @@ if {[variant_isset universal]} {
 } else {
     build.env-append       "CC=${configure.cc} ${configure.cc_archflags}"
     destroot.env-append    "CC=${configure.cc} ${configure.cc_archflags}"
-}
-
-post-destroot {
-    platform darwin 8 {
-        ui_msg "changing install name - Tiger hack due to broken meson"
-        system "install_name_tool -change @loader_path/libatspi.0.dylib \
-                    ${prefix}/lib/libatspi.0.dylib \
-                    ${destroot}${prefix}/libexec/at-spi2-registryd"
-    }
 }
 
 livecheck.type      gnome
