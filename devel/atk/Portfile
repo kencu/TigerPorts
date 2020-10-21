@@ -37,8 +37,10 @@ depends_lib         path:lib/pkgconfig/glib-2.0.pc:glib2 \
 configure.args      -Ddocs=true
 
 platform darwin 8 {
-    # the gnome document scanner currently is not happy about our meson edits
-    configure.args-replace -Ddocs=true -Ddocs=false
+    # the gir scanner currently is not happy about our meson edits
+    # and documentation building fails to find the needed library
+    # see gtkdochelper.py and gnome.py for hints
+    destroot.env-append    "DYLD_LIBRARY_PATH=${workpath}/build/atk"
 }
 
 # gobject-introspection uses g-ir-scanner, which uses $CC from env
