@@ -1,0 +1,20 @@
+--- extensions/sse-half.c.orig	2020-03-26 14:33:09.000000000 -0700
++++ extensions/sse-half.c	2020-03-26 14:33:41.000000000 -0700
+@@ -18,7 +18,7 @@
+ 
+ #include "config.h"
+ 
+-#if defined(USE_SSE4_1) && defined(USE_F16C) && defined(ARCH_X86_64)
++#if defined(USE_SSE4_1) && defined(USE_F16C) && defined(ARCH_X86_64) && __LP64__
+ 
+ #include <immintrin.h>
+ 
+@@ -161,7 +161,7 @@
+ int
+ init (void)
+ {
+-#if defined(USE_SSE4_1) && defined(USE_F16C) && defined(ARCH_X86_64)
++#if defined(USE_SSE4_1) && defined(USE_F16C) && defined(ARCH_X86_64) && __LP64__
+   const Babl *rgbaF_linear = babl_format_new (
+     babl_model ("RGBA"),
+     babl_type ("float"),

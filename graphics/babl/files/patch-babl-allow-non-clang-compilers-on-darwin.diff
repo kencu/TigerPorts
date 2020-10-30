@@ -1,0 +1,14 @@
+--- meson.build.orig	2020-03-26 14:41:45.000000000 -0700
++++ meson.build	2020-03-26 14:42:23.000000000 -0700
+@@ -108,11 +108,6 @@
+                   host_os.startswith('windows'))
+ 
+ platform_osx = host_os.startswith('darwin')
+-if platform_osx
+-  if cc.get_id() != 'clang'
+-    error('You should use Clang/Clang++ on OSX.')
+-  endif
+-endif
+ 
+ platform_android = host_os.contains('android')
+ 
