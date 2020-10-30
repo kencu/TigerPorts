@@ -45,3 +45,4 @@ livecheck.regex     libbluray (\[0-9.]+)
 platform darwin 8 {
     patchfiles-append patch-libbluray-disable-POSIX-Tiger.diff
 }
+
