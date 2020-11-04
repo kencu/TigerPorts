@@ -497,6 +497,55 @@ variant app description "build application bundle to launch ${subport}" {
         }
         close ${script}
 
+if {${os.platform} eq "darwin" && ${os.major} < 9} {
+        set fp [open "${worksrcpath}/${appName}/Contents/Info.plist" w 0644]
+        puts ${fp} "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>m</string>
+			</array>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>Mfile</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+		</dict>
+	</array>
+	<key>CFBundleExecutable</key>
+	<string>Octave</string>
+	<key>CFBundleIconFile</key>
+	<string>Octave.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.octave.Octave</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Octave</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>${version}</string>
+	<key>CFBundleSignature</key>
+	<string>Octave</string>
+	<key>CFBundleVersion</key>
+	<string>${version}</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+</dict>
+</plist>"
+        close ${fp}
+}
+
+if {${os.platform} eq "darwin" && ${os.major} >= 9} {
         set values "
             CFBundleDevelopmentRegion                         string  English
             CFBundleExecutable                                string  Octave
@@ -527,7 +576,7 @@ variant app description "build application bundle to launch ${subport}" {
 
         # conversion by plutil set verys limited permissions
         system "/bin/chmod 0644 ${worksrcpath}/${appName}/Contents/Info.plist"
-
+}
         xinstall -d -m 0755 ${worksrcpath}/Octave.iconset
 
         # values from original SVG file
