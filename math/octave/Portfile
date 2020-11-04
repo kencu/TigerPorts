@@ -71,6 +71,9 @@ patchfiles-append patch-link_location.diff
 # see https://trac.macports.org/ticket/58226
 patchfiles-append patch-qt5-cxxflags.diff
 
+# add missing off_t definition in one file for Tiger
+patchfiles-append patch-octave-520-libinterp-corefcn-oct-stream-add-offt-def-Tiger.diff
+
 # see https://savannah.gnu.org/patch/index.php?9806
 set java_version 1.8
 patchfiles-append patch-java_version.diff

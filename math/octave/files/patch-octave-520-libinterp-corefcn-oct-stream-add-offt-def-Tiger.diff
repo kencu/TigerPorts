@@ -1,0 +1,19 @@
+kencu@macports.org
+add a missing definition in one file
+this definition must be added through some header in later macOS versions
+
+--- libinterp/corefcn/oct-stream.h.orig	2020-11-03 07:58:05.000000000 -0800
++++ libinterp/corefcn/oct-stream.h	2020-11-03 07:59:09.000000000 -0800
+@@ -43,6 +43,12 @@
+ #include "mach-info.h"
+ #include "oct-refcount.h"
+ 
++#ifndef _OFF_T
++typedef __darwin_off_t	off_t;
++#define _OFF_T
++#endif
++
++
+ namespace octave
+ {
+   class interpreter;
