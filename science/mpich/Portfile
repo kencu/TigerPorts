@@ -6,6 +6,10 @@ PortGroup           select 1.0
 PortGroup           compilers 1.0
 PortGroup           muniversal 1.0
 
+# there is a difference between Leopard and Tiger sys/aio.h
+# this requires a modified sys/aio.h in LegacySupport to work
+PortGroup           legacysupport 1.0
+
 # make sure to keep in sync with mpi-doc
 name                mpich
 version             3.3.2
@@ -116,6 +120,17 @@ subport ${name}-devel-default {}
 # Linker for Apple clang version 421.11.66 segfaults
 # See https://trac.macports.org/ticket/36654#comment:9
 compiler.blacklist-append   {clang >= 421.11.66 < 425.0.24}
+
+# fix up defaulting on Tiger PPC at least
+# forces build to gcc7, which works
+# not yet tested on Tiger Intel
+# there may be a more elegant method of specifying compilers here
+
+platform darwin 8 {
+    if {${build_arch} eq "ppc" || ${build_arch} eq "ppc64"} {
+        compiler.blacklist-append *gcc-3.* *gcc-4.0 *gcc-4.2 *clang*
+    }
+}
 
 configure.args      --disable-dependency-tracking    \
                     --disable-fortran                \
