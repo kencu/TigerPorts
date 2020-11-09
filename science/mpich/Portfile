@@ -170,6 +170,8 @@ configure.optflags-delete   -O2 -Os
 configure.cppflags-delete   -I${prefix}/include
 configure.ldflags-delete    -L${prefix}/lib
 
+test.run yes
+test.target check
 if {${subport} != ${name}} {
     set cname                   [lindex [split ${subport} -] end]
     if {${cname} == "default"} {
