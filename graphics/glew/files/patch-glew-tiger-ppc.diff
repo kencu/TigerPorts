@@ -1,0 +1,93 @@
+diff --git auto/src/glewinfo_tail.c auto/src/glewinfo_tail.c
+index 4d45538..808e206 100644
+--- auto/src/glewinfo_tail.c
++++ auto/src/glewinfo_tail.c
+@@ -448,7 +448,7 @@ GLboolean glewCreateContext (struct createParams *params)
+   if (error) return GL_TRUE;
+   error = CGLCreateContext(pf, NULL, &ctx);
+   if (error) return GL_TRUE;
+-  CGLReleasePixelFormat(pf);
++  CGLDestroyPixelFormat(pf);
+   octx = CGLGetCurrentContext();
+   error = CGLSetCurrentContext(ctx);
+   if (error) return GL_TRUE;
+@@ -462,7 +462,7 @@ GLboolean glewCreateContext (struct createParams *params)
+ void glewDestroyContext ()
+ {
+   CGLSetCurrentContext(octx);
+-  CGLReleaseContext(ctx);
++  CGLDestroyContext(ctx);
+ }
+ 
+ /* ------------------------------------------------------------------------ */
+diff --git config/Makefile.darwin config/Makefile.darwin
+index 8030f05..ccae51c 100644
+--- config/Makefile.darwin
++++ config/Makefile.darwin
+@@ -1,15 +1,15 @@
+-GLEW_DEST = /usr/local
++GLEW_DEST ?= /usr/local
+ NAME = $(GLEW_NAME)
+ CC = cc
+ LD = cc
+ CFLAGS.EXTRA += -dynamic -fno-common
+-CFLAGS.EXTRA += -pedantic
+ CFLAGS.EXTRA += -fPIC
+-LDFLAGS.EXTRA =
++CFLAGS.EXTRA += $(CFLAGS.ARCH)
++LDFLAGS.EXTRA = $(LDFLAGS.ARCH)
+ ifneq (undefined, $(origin GLEW_APPLE_GLX))
+ CFLAGS.EXTRA += -std=c99
+-CFLAGS.EXTRA += -I/usr/X11R6/include -D'GLEW_APPLE_GLX'
+-LDFLAGS.GL = -L/usr/X11R6/lib -lGL -lX11
++CFLAGS.EXTRA += -I/opt/local/include -D'GLEW_APPLE_GLX'
++LDFLAGS.GL = -L/opt/local/lib -lGL -lX11
+ else
+ CFLAGS.EXTRA += -std=c89
+ GLEW_NO_GLU = -DGLEW_NO_GLU
+diff --git config/Makefile.darwin-gcc6 config/Makefile.darwin-gcc6
+index ecb61b3..fb5a887 100644
+diff --git src/glewinfo.c src/glewinfo.c
+index 882654d..7b08c11 100644
+--- src/glewinfo.c
++++ src/glewinfo.c
+@@ -16731,7 +16731,7 @@ GLboolean glewCreateContext (struct createParams *params)
+   if (error) return GL_TRUE;
+   error = CGLCreateContext(pf, NULL, &ctx);
+   if (error) return GL_TRUE;
+-  CGLReleasePixelFormat(pf);
++  CGLDestroyPixelFormat(pf);
+   octx = CGLGetCurrentContext();
+   error = CGLSetCurrentContext(ctx);
+   if (error) return GL_TRUE;
+@@ -16745,7 +16745,7 @@ GLboolean glewCreateContext (struct createParams *params)
+ void glewDestroyContext ()
+ {
+   CGLSetCurrentContext(octx);
+-  CGLReleaseContext(ctx);
++  CGLDestroyContext(ctx);
+ }
+ 
+ /* ------------------------------------------------------------------------ */
+diff --git src/visualinfo.c src/visualinfo.c
+index 99e8c63..2382d98 100644
+--- src/visualinfo.c
++++ src/visualinfo.c
+@@ -1154,7 +1154,7 @@ GLboolean CreateContext (GLContext* ctx)
+   if (error) return GL_TRUE;
+   error = CGLCreateContext(pf, NULL, &ctx->ctx);
+   if (error) return GL_TRUE;
+-  CGLReleasePixelFormat(pf);
++  CGLDestroyPixelFormat(pf);
+   ctx->octx = CGLGetCurrentContext();
+   error = CGLSetCurrentContext(ctx->ctx);
+   if (error) return GL_TRUE;
+@@ -1165,7 +1165,7 @@ void DestroyContext (GLContext* ctx)
+ {
+   if (NULL == ctx) return;
+   CGLSetCurrentContext(ctx->octx);
+-  if (NULL != ctx->ctx) CGLReleaseContext(ctx->ctx);
++  if (NULL != ctx->ctx) CGLDestroyContext(ctx->ctx);
+ }
+ 
+ /* ------------------------------------------------------------------------ */
