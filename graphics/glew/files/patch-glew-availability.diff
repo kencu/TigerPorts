@@ -1,0 +1,11 @@
+--- include/GL/glew.h.orig	2020-11-16 19:10:38.000000000 -0800
++++ include/GL/glew.h	2020-11-16 19:12:48.000000000 -0800
+@@ -1190,7 +1190,7 @@
+ 
+ #ifndef GLEW_NO_GLU
+ #  ifdef __APPLE__
+-#    include <Availability.h>
++#    include <AvailabilityMacros.h>
+ #    if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
+ #      define GLEW_NO_GLU
+ #    endif

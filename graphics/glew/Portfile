@@ -27,7 +27,8 @@ checksums          md5 b2ab12331033ddfaa50dc39345343980 \
 patchfiles         config_Makefile.darwin.patch
 
 platform darwin 8 {
-    patchfiles     patch-glew-tiger-ppc.diff
+    patchfiles     patch-glew-tiger-ppc.diff \
+                   patch-glew-availability.diff
 }
 
 post-patch {
