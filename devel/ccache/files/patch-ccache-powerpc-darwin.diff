@@ -1,0 +1,27 @@
+diff --git src/third_party/doctest.h src/third_party/doctest.h
+index 7712dd6..2452723 100644
+--- src/third_party/doctest.h
++++ src/third_party/doctest.h
+@@ -370,6 +370,9 @@ DOCTEST_MSVC_SUPPRESS_WARNING(26812) // Prefer 'enum class' over 'enum'
+ #elif defined(DOCTEST_PLATFORM_MAC)
+ #if defined(__x86_64) || defined(__x86_64__) || defined(__amd64__) || defined(__i386)
+ #define DOCTEST_BREAK_INTO_DEBUGGER() __asm__("int $3\n" : :)
++#elif defined(__ppc__) || defined(__ppc64__)
++// https://www.cocoawithlove.com/2008/03/break-into-debugger.html
++#define DOCTEST_BREAK_INTO_DEBUGGER() __asm__("li r0, 20\nsc\nnop\nli r0, 37\nli r4, 2\nsc\nnop\n": : : "memory","r0","r3","r4")
+ #else
+ #define DOCTEST_BREAK_INTO_DEBUGGER() __asm__("brk #0");
+ #endif
+diff --git test/run test/run
+index 2244943..ebf46c8 100755
+--- test/run
++++ test/run
+@@ -514,7 +514,7 @@ if [[ $OSTYPE = msys* ]]; then
+ fi
+ 
+ if $HOST_OS_APPLE; then
+-    SDKROOT=$(xcrun --sdk macosx --show-sdk-path 2>/dev/null)
++    SDKROOT=/
+     if [ "$SDKROOT" = "" ]; then
+         echo "Error: xcrun --show-sdk-path failure"
+         exit 1

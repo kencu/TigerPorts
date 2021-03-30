@@ -1,0 +1,58 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           compiler_blacklist_versions 1.0
+PortGroup           github 1.0
+
+# src/third_party/blake3/CMakeLists.txt checks CMAKE_SIZEOF_VOID_P
+PortGroup           muniversal 1.0
+
+github.setup        ccache ccache 4.2 v
+revision            0
+checksums           rmd160  3aaf15c63662fe326a3816341ddadbb273399981 \
+                    sha256  2f14b11888c39778c93814fc6843fc25ad60ff6ba4eeee3dff29a1bad67ba94f \
+                    size    422688
+
+categories          devel
+platforms           darwin freebsd
+license             GPL-3+
+
+maintainers         {ryandesign @ryandesign} openmaintainer
+
+description         object-file caching compiler wrapper
+
+long_description \
+    ccache is a compiler cache.  It acts as a caching pre-processor to C/C++ \
+    compilers, using the -E compiler switch and a hash to detect when a \
+    compilation can be satisfied from cache.  This often results in a 5 to 10 \
+    times speedup in common compilations.
+
+homepage            https://ccache.dev
+github.tarball_from releases
+use_xz              yes
+
+platform darwin powerpc {
+    patchfiles-append  patch-ccache-powerpc-darwin.diff
+}
+platform darwin 8 {
+    patchfiles-append  patch-ccache-no-posix-tiger.diff
+}
+compiler.c_standard 1999
+compiler.cxx_standard \
+                    2011
+
+# CMake Error at CMakeLists.txt:31: The compiler you are using is too old, sorry.
+compiler.blacklist  {clang < 700}
+
+depends_build-append \
+                    port:asciidoc
+
+depends_lib-append  port:zstd
+
+# Do not use ccache to build this port unless MacPorts tells it to.
+configure.args-append -DUSE_CCACHE=NO
+
+build.target-append doc
+
+test.run            yes
