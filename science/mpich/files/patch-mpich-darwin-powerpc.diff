@@ -1,0 +1,28 @@
+--- ./src/mpi/datatype/typerep/dataloop/looputil.h.orig	2021-06-13 00:05:07.000000000 -0700
++++ ./src/mpi/datatype/typerep/dataloop/looputil.h	2021-06-13 00:07:24.000000000 -0700
+@@ -29,6 +29,7 @@
+ #include <endian.h>
+ #endif
+ 
++
+ #ifdef HAVE_INT64
+ #define uint64_t __int64
+ #define uint32_t __int32
+@@ -48,6 +49,17 @@
+ #define __BYTE_ORDER BYTE_ORDER
+ #endif
+ 
++#if defined __APPLE__
++#if defined (__ppc__) || defined(__ppc64__)
++#ifndef __BYTE_ORDER
++#define __BYTE_ORDER __DARWIN_BYTE_ORDER
++#endif
++#ifndef __BIG_ENDIAN
++#define __BIG_ENDIAN __DARWIN_BIG_ENDIAIN
++#endif
++#endif
++#endif
++
+ #if defined(WORDS_BIGENDIAN)
+ #define BLENDIAN 0
+ #elif defined(WORDS_LITTLEENDIAN)
