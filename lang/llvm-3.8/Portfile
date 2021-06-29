@@ -1,58 +1,40 @@
-# TODO:
-#  * Update clang subport to build against installed llvm
-
-PortSystem              1.0
-PortGroup select        1.0
+PortSystem                            1.0
+PortGroup select                      1.0
 PortGroup compiler_blacklist_versions 1.0
-PortGroup active_variants 1.1
-PortGroup cmake         1.0
+PortGroup active_variants             1.1
+PortGroup cmake                       1.0
 
 
-depends_build-replace  path:bin/cmake:cmake port:cmake-bootstrap
-configure.cmd          ${prefix}/libexec/cmake-bootstrap/bin/cmake
+depends_build-replace       path:bin/cmake:cmake port:cmake-bootstrap
+configure.cmd               ${prefix}/libexec/cmake-bootstrap/bin/cmake
 
-set llvm_version        3.8
-set llvm_version_no_dot 38
-name                    llvm-${llvm_version}
-revision                3
-subport                 clang-${llvm_version} { revision 9 }
-set suffix              mp-${llvm_version}
-set sub_prefix          ${prefix}/libexec/llvm-${llvm_version}
-dist_subdir             llvm
-categories              lang
-platforms               darwin
-license                 NCSA
-maintainers             {kencu @kencu}
+set llvm_version            3.8
+set llvm_version_no_dot     38
+name                        llvm-${llvm_version}
+revision                    3
+subport                     clang-${llvm_version} { revision 9 }
+set suffix                  mp-${llvm_version}
+set sub_prefix              ${prefix}/libexec/llvm-${llvm_version}
+dist_subdir                 llvm
+categories                  lang
+platforms                   darwin
+license                     NCSA
+maintainers                 {kencu @kencu}
 
 if {${subport} eq "llvm-${llvm_version}"} {
-    homepage            https://llvm.org/
-    description         llvm is a next generation compiler infrastructure
-    long_description    The LLVM Core libraries provide a modern source- and \
-                        target-independent optimizer, along with code \
-                        generation support for many popular CPUs (as well as \
-                        some less common ones!) These libraries are built \
-                        around a well specified code representation known as \
-                        the LLVM intermediate representation ("LLVM IR").
+    homepage                https://llvm.org/
+    description             llvm is a next generation compiler infrastructure
+    long_description        {*}$description
 
-    depends_lib         port:libedit port:libffi port:ncurses port:zlib port:python27
-    depends_run         port:llvm_select
+    depends_lib             port:libedit port:libffi port:ncurses port:zlib port:python27
+    depends_run             port:llvm_select
 } elseif {${subport} eq "clang-${llvm_version}"} {
-    homepage            https://clang.llvm.org/
-    description         C, C++, Objective C and Objective C++ compiler
-    long_description    Clang is an "LLVM native" C/C++/Objective-C compiler, \
-                        which aims to deliver amazingly fast compiles (e.g. \
-                        about 3x faster than GCC when compiling Objective-C \
-                        code in a debug configuration), extremely useful error \
-                        and warning messages and to provide a platform for \
-                        building great source level tools. The included Clang \
-                        Static Analyzer is a tool that automatically finds bugs in \
-                        your code, and is a great example of the sort of tool \
-                        that can be built using the Clang frontend as a \
-                        library to parse C/C++ code.
+    homepage                https://clang.llvm.org/
+    description             C, C++, Objective C and Objective C++ compiler
+    long_description        {*}$description
 
-#    depends_lib         port:libxml2 port:libomp port:llvm-${llvm_version} port:python27
-    depends_lib         port:llvm-${llvm_version} port:python27
-    depends_run         port:clang_select port:ld64
+    depends_lib             port:llvm-${llvm_version}
+    depends_run             port:clang_select port:ld64
     depends_skip_archcheck-append ld64
 
     # Older Xcode's lipo doesn't support x86_64h slices
@@ -66,13 +48,13 @@ if {${subport} eq "llvm-${llvm_version}"} {
 #    default_variants    +analyzer
 }
 
-version                 ${llvm_version}.1
-epoch                   1
-master_sites            http://llvm.org/releases/${version}
-use_xz                  yes
-extract.suffix          .tar.xz
-distfiles               llvm-${version}.src${extract.suffix}
-worksrcdir              llvm-${version}.src
+version                     ${llvm_version}.1
+epoch                       1
+master_sites                http://llvm.org/releases/${version}
+use_xz                      yes
+extract.suffix              .tar.xz
+distfiles                   llvm-${version}.src${extract.suffix}
+worksrcdir                  llvm-${version}.src
 
 if {${distfiles} ne ""} {
     if {${subport} eq "llvm-${llvm_version}"} {
@@ -172,10 +154,6 @@ default build.dir           {${workpath}/build}
 
 cmake.install_prefix        ${sub_prefix}
 
-# Adjust this once cmake-1.0.tcl is fixed:
-#     https://github.com/macports/macports-ports/pull/103
-# Also see:
-#     https://llvm.org/bugs/show_bug.cgi?id=31425
 configure.args-delete \
     -DCMAKE_INSTALL_NAME_DIR=${prefix}/lib \
     -DCMAKE_INSTALL_RPATH=${prefix}/lib \
@@ -212,13 +190,7 @@ if {${subport} eq "llvm-${llvm_version}"} {
         -DCLANG_ENABLE_ARCMT=OFF
 }
 
-# llvm-3.5 and later requires a C++11 runtime
-# XCode 4.3's clang (318.x) fails per https://trac.macports.org/ticket/44161
-# XCode 4.5's clang (421.11.66) fails due to http://llvm.org/bugs/show_bug.cgi?id=20184
-# Xcode 4.6.3's clang (425.0.28) fails due to http://trac.macports.org/ticket/46897
-# Xcode 5.1's clang (clang-503.0.40) has codegen issues (resulting compiler crashes)
-# Xcode 6.2's clang (600.0.57) fails due to https://llvm.org/bugs/show_bug.cgi?id=25753
-#compiler.blacklist *gcc* {clang < 602}
+compiler.blacklist *gcc-3.* *gcc-4.* {clang < 602}
 
 if {${subport} eq "clang-${llvm_version}"} {
     # clang older than 3.5 fail due to https://llvm.org/bugs/show_bug.cgi?id=25753
@@ -227,7 +199,7 @@ if {${subport} eq "clang-${llvm_version}"} {
 
 # blacklist current and future versions if they're not available in order to
 # help break potential dependency cycles.
-foreach ver {3.8 3.9 4.0 5.0 6.0 7.0 8.0 9.0 10 devel} {
+foreach ver {3.8 3.9 4.0 5.0 6.0 7.0 8.0 9.0 10 11 12 devel} {
     if {![file exists ${prefix}/bin/clang-mp-${ver}]} {
         compiler.blacklist-append macports-clang-${ver}
     }
