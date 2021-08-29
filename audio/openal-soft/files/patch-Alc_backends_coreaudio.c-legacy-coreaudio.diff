@@ -1,0 +1,148 @@
+--- Alc/backends/coreaudio.c.old	2018-10-11 23:05:31.000000000 +0100
++++ Alc/backends/coreaudio.c	2021-08-29 19:16:40.000000000 +0100
+@@ -31,9 +31,15 @@
+ #include <unistd.h>
+ #include <AudioUnit/AudioUnit.h>
+ #include <AudioToolbox/AudioToolbox.h>
++#include <Availability.h>
+ 
+ #include "backends/base.h"
+ 
++#ifndef LEGACY_COREAUDIO
++#if (defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED < 1060)
++#define LEGACY_COREAUDIO 1
++#endif
++#endif
+ 
+ static const ALCchar ca_device[] = "CoreAudio Default";
+ 
+@@ -75,7 +81,11 @@
+ static void ALCcoreAudioPlayback_Destruct(ALCcoreAudioPlayback *self)
+ {
+     AudioUnitUninitialize(self->audioUnit);
++#if LEGACY_COREAUDIO
++    CloseComponent(self->audioUnit);
++#else
+     AudioComponentInstanceDispose(self->audioUnit);
++#endif
+ 
+     ALCbackend_Destruct(STATIC_CAST(ALCbackend, self));
+ }
+@@ -100,8 +110,13 @@
+ static ALCenum ALCcoreAudioPlayback_open(ALCcoreAudioPlayback *self, const ALCchar *name)
+ {
+     ALCdevice *device = STATIC_CAST(ALCbackend,self)->mDevice;
++#if LEGACY_COREAUDIO
++    ComponentDescription desc;
++    Component comp;
++#else
+     AudioComponentDescription desc;
+     AudioComponent comp;
++#endif
+     OSStatus err;
+ 
+     if(!name)
+@@ -120,14 +135,22 @@
+     desc.componentFlags = 0;
+     desc.componentFlagsMask = 0;
+ 
++#if LEGACY_COREAUDIO
++    comp = FindNextComponent(NULL, &desc);
++#else
+     comp = AudioComponentFindNext(NULL, &desc);
++#endif
+     if(comp == NULL)
+     {
+         ERR("AudioComponentFindNext failed\n");
+         return ALC_INVALID_VALUE;
+     }
+ 
++#if LEGACY_COREAUDIO
++    err = OpenAComponent(comp, &self->audioUnit);
++#else
+     err = AudioComponentInstanceNew(comp, &self->audioUnit);
++#endif
+     if(err != noErr)
+     {
+         ERR("AudioComponentInstanceNew failed\n");
+@@ -139,7 +162,11 @@
+     if(err != noErr)
+     {
+         ERR("AudioUnitInitialize failed\n");
++#if LEGACY_COREAUDIO
++        CloseComponent(self->audioUnit);
++#else
+         AudioComponentInstanceDispose(self->audioUnit);
++#endif
+         return ALC_INVALID_VALUE;
+     }
+ 
+@@ -397,7 +424,11 @@
+     self->audioConverter = NULL;
+ 
+     if(self->audioUnit)
++#if LEGACY_COREAUDIO
++        CloseComponent(self->audioUnit);
++#else
+         AudioComponentInstanceDispose(self->audioUnit);
++#endif
+     self->audioUnit = 0;
+ 
+     ALCbackend_Destruct(STATIC_CAST(ALCbackend, self));
+@@ -453,12 +484,20 @@
+     AudioStreamBasicDescription hardwareFormat;   // The hardware format
+     AudioStreamBasicDescription outputFormat;     // The AudioUnit output format
+     AURenderCallbackStruct input;
++#if LEGACY_COREAUDIO
++    ComponentDescription desc;
++#else
+     AudioComponentDescription desc;
++#endif
+     UInt32 outputFrameCount;
+     UInt32 propertySize;
+     AudioObjectPropertyAddress propertyAddress;
+     UInt32 enableIO;
++#if LEGACY_COREAUDIO
++    Component comp;
++#else
+     AudioComponent comp;
++#endif
+     OSStatus err;
+ 
+     if(!name)
+@@ -477,7 +516,11 @@
+     desc.componentFlagsMask = 0;
+ 
+     // Search for component with given description
++#if LEGACY_COREAUDIO
++    comp = FindNextComponent(NULL, &desc);
++#else
+     comp = AudioComponentFindNext(NULL, &desc);
++#endif
+     if(comp == NULL)
+     {
+         ERR("AudioComponentFindNext failed\n");
+@@ -485,7 +528,11 @@
+     }
+ 
+     // Open the component
++#if LEGACY_COREAUDIO
++    err = OpenAComponent(comp, &self->audioUnit);
++#else
+     err = AudioComponentInstanceNew(comp, &self->audioUnit);
++#endif
+     if(err != noErr)
+     {
+         ERR("AudioComponentInstanceNew failed\n");
+@@ -688,7 +735,11 @@
+         AudioConverterDispose(self->audioConverter);
+     self->audioConverter = NULL;
+     if(self->audioUnit)
++#if LEGACY_COREAUDIO
++        CloseComponent(self->audioUnit);
++#else
+         AudioComponentInstanceDispose(self->audioUnit);
++#endif
+     self->audioUnit = 0;
+ 
+     return ALC_INVALID_VALUE;
