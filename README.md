@@ -5,7 +5,7 @@ To use this overlay repository with MacPorts, download this  repo to /opt/TigerP
 ```
 /opt/local/etc/macports/sources.conf
 
-$ diff -u /opt/local/etc/macports/sources.conf.default /opt/local/etc/macports/sources.conf
+$ diff -u /opt/local/etc/macports/sources.conf /opt/local/etc/macports/sources.conf
 --- /opt/local/etc/macports/sources.conf
 +++ /opt/local/etc/macports/sources.conf
 @@ -27,4 +27,7 @@
