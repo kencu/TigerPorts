@@ -6,8 +6,8 @@ To use this overlay repository with MacPorts, download this  repo to /opt/TigerP
 /opt/local/etc/macports/sources.conf
 
 $ diff -u /opt/local/etc/macports/sources.conf.default /opt/local/etc/macports/sources.conf
---- /opt/local/etc/macports/sources.conf.default    2021-08-22 14:16:52.000000000 -0700
-+++ /opt/local/etc/macports/sources.conf    2021-08-24 00:30:40.000000000 -0700
+--- /opt/local/etc/macports/sources.conf
++++ /opt/local/etc/macports/sources.conf
 @@ -27,4 +27,7 @@
 # sites, etc.), the primary MacPorts source must always be tagged
 # "[default]", even if switched from the default "rsync://" URL.
