@@ -46,6 +46,9 @@ compiler.cxx_standard   2011
 
 patchfiles				patch-Alc_backends_coreaudio.c-legacy-coreaudio.diff
 
+# use CC for buildling native-tools as well, otherwise errors
+patchfiles-append       openalsoft-use-CC.diff
+
 configure.args-append   -DALSOFT_EXAMPLES=OFF \
                         -DALSOFT_TESTS=OFF \
                         -DALSOFT_UTILS=ON \
