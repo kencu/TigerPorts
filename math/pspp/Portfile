@@ -63,6 +63,12 @@ post-patch {
     }
 }
 
+# pivot-output.c:70: warning: missing initializer
+compiler.blacklist {*gcc-4.[0-2]}
+
+# only for 32bit builds for now
+configure.cppflags-append -D__WORDSIZE=32
+
 configure.args-append   --disable-rpath \
                     --without-libpq \
                     --without-gui \
