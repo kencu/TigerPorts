@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        p11-glue p11-kit 0.23.20
+github.setup        p11-glue p11-kit 0.24.0
+revision            1
 license             Permissive
 description         Provides a way to load and enumerate PKCS#11 modules and a standard \
                     configuration setup for installing PKCS#11 modules in such a way that \
@@ -15,9 +16,10 @@ platforms           darwin
 
 github.tarball_from releases
 use_xz              yes
-checksums           rmd160  d5569d7d07de7e2c436764f22ebbb783f1638392 \
-                    sha256  14d86024c3dfd6b967d9bc0b4ec7b2973014fe7423481f4d230a1a63b8aa6104 \
-                    size    822588
+
+checksums           rmd160  5dab40899e748c0879f1a30fc7e06811898159a7 \
+                    sha256  81e6140584f635e4e956a1b93a32239acf3811ff5b2d3a5c6094e94e99d2c685 \
+                    size    834392
 
 depends_build       port:pkgconfig
 
