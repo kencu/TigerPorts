@@ -131,18 +131,17 @@ if { ${os.platform} eq "darwin" && ${os.major} < 10 } {
         touch ${worksrcpath}/js/src/obj/config.status
     }
 
-
     if { ${os.major} == 8 } {
         # Tiger ships with Make 3.80; need 3.81 or later
         depends_build-append port:gmake
         build.cmd            gmake
-
-        # Tiger's assembler doesn't like the included ICU files.
-        # Also there's a run-time failure in u_init(), so just
-        # disable ICU until someone wants to sort it out.
-        configure.args-append     --without-intl-api
         configure.cppflags-append -D__DARWIN_UNIX03
     }
+
+    # the old gas assembler doesn't like the included ICU files.
+    # Also there's a run-time failure in u_init(), so just
+    # disable ICU until someone wants to sort it out.
+    configure.args-append     --without-intl-api
 
     if {[string match *gcc* ${configure.compiler}] && ${os.arch} eq "powerpc" } {
         # Make structs size-compatible with Intel (fixes several static_asserts)
