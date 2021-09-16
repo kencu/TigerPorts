@@ -1,0 +1,40 @@
+$ ag var/db/timezone
+src/extra/tzone/localtime.c
+419:            p = "/var/db/timezone/zoneinfo";
+
+src/library/base/all.R
+6194:        vers <- try(readLines("/var/db/timezone/zoneinfo/+VERSION"),
+6205:        Sys.setenv(TZDIR = "/var/db/timezone/zoneinfo")
+6298:    ## man tzset on macOS (from BSD) mentions /var/db/timezone/localtime
+6302:         file.exists(lt0 <- "/var/db/timezone/localtime")) &&
+6309:        ## macOS 10.13.[12] is a link into /var/db/timezone/zoneinfo,
+7535:                tzdir <- "/var/db/timezone/zoneinfo"
+
+src/library/base/man/timezones.Rd
+170:  system database at \file{/var/db/timezone/zoneinfo} and that
+
+src/library/base/R/datetime.R
+61:        vers <- try(readLines("/var/db/timezone/zoneinfo/+VERSION"),
+72:        Sys.setenv(TZDIR = "/var/db/timezone/zoneinfo")
+165:    ## man tzset on macOS (from BSD) mentions /var/db/timezone/localtime
+169:         file.exists(lt0 <- "/var/db/timezone/localtime")) &&
+176:        ## macOS 10.13.[12] is a link into /var/db/timezone/zoneinfo,
+1402:                tzdir <- "/var/db/timezone/zoneinfo"
+
+tests/Examples/base-Ex.Rout.prev
+237:  cannot open file '/var/db/timezone/zoneinfo/+VERSION': No such file or directory
+
+tests/Examples/graphics-Ex.Rout
+208:  cannot open file '/var/db/timezone/zoneinfo/+VERSION': No such file or directory
+
+tests/Examples/grDevices-Ex.Rout
+3531:  cannot open file '/var/db/timezone/zoneinfo/+VERSION': No such file or directory
+
+tests/Examples/methods-Ex.Rout
+208:  cannot open file '/var/db/timezone/zoneinfo/+VERSION': No such file or directory
+
+tests/Examples/utils-Ex.Rout.prev
+5282:  cannot open file '/var/db/timezone/zoneinfo/+VERSION': No such file or directory
+
+tests/simple-true.Rout.fail
+248:  cannot open file '/var/db/timezone/zoneinfo/+VERSION': No such file or directory

@@ -37,6 +37,13 @@ checksums                   rmd160  d0eb885bb3f3da858e023b2983098e927af70aaa \
 # Fails to configure with Xcode clang 4.6.3
 compiler.blacklist-append   {clang < 500}
 
+if {${os.platform} eq "darwin" && ${os.major} < 10} {
+    # blacklisting the compiler does not work right here. I am not
+    # certain why it doesn't. Have to whitelist gcc7 until we know.
+    compiler.whitelist macports-gcc-7
+    #compiler.blacklist-append {*gcc-4.[0-2]}
+}
+
 compilers.choose            fc f77
 compilers.setup             require_fortran
 
@@ -74,6 +81,13 @@ post-patch {
 
     ## Check to see if this is fixed post 3.3.0
     reinplace "s|<libintl.h>|\"libintl.h\"|" "${worksrcpath}/src/include/Defn.h"
+
+    if {${os.platform} eq "darwin" && ${os.major} < 17} {
+            reinplace "s|/var/db/timezone/zoneinfo|/usr/share/zoneinfo|g" \
+                "${worksrcpath}/src/extra/tzone/localtime.c" \
+                "${worksrcpath}/src/library/base/man/timezones.Rd" \
+                "${worksrcpath}/src/library/base/R/datetime.R"
+    }
 }
 
 # Note: gcc cannot be used for the C compiler. It will give:
