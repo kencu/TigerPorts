@@ -1,0 +1,35 @@
+The altivec header inclusion does not appear to be used in these files, and
+breaks non-Altivec builds.
+
+--- SDL2-2.0.3/src/video/cocoa/SDL_cocoamessagebox.m.orig
++++ SDL2-2.0.3/src/video/cocoa/SDL_cocoamessagebox.m
+@@ -22,13 +22,6 @@
+ 
+ #if SDL_VIDEO_DRIVER_COCOA
+ 
+-#if defined(__APPLE__) && defined(__POWERPC__) && !defined(__APPLE_ALTIVEC__)
+-#include <altivec.h>
+-#undef bool
+-#undef vector
+-#undef pixel
+-#endif
+-
+ #include "SDL_events.h"
+ #include "SDL_timer.h"
+ #include "SDL_messagebox.h"
+--- SDL2-2.0.3/src/video/cocoa/SDL_cocoavideo.m.orig
++++ SDL2-2.0.3/src/video/cocoa/SDL_cocoavideo.m
+@@ -22,13 +22,6 @@
+ 
+ #if SDL_VIDEO_DRIVER_COCOA
+ 
+-#if defined(__APPLE__) && defined(__POWERPC__) && !defined(__APPLE_ALTIVEC__)
+-#include <altivec.h>
+-#undef bool
+-#undef vector
+-#undef pixel
+-#endif
+-
+ #include "SDL.h"
+ #include "SDL_endian.h"
+ #include "SDL_cocoavideo.h"
