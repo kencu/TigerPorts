@@ -1,0 +1,44 @@
+--- lib/get_ppid_of.c.orig
++++ lib/get_ppid_of.c
+@@ -32,7 +32,8 @@
+ # include <sys/sysctl.h> /* sysctl, struct kinfo_proc */
+ #endif
+ 
+-#if defined __APPLE__ && defined __MACH__                   /* Mac OS X */
++#if defined __APPLE__ && defined __MACH__ && \
++    __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1050   /* Mac OS X */
+ # include <libproc.h>
+ #endif
+ 
+@@ -225,7 +226,8 @@
+ 
+ #endif
+ 
+-#if defined __APPLE__ && defined __MACH__                   /* Mac OS X */
++#if defined __APPLE__ && defined __MACH__ && \
++  __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1050     /* Mac OS X */
+ 
+ # if defined PROC_PIDT_SHORTBSDINFO
+   struct proc_bsdshortinfo info;
+--- lib/get_progname_of.c.orig
++++ lib/get_progname_of.c
+@@ -40,7 +40,8 @@
+ # include <sys/sysctl.h> /* sysctl, struct kinfo_proc */
+ #endif
+ 
+-#if defined __APPLE__ && defined __MACH__                   /* Mac OS X */
++#if defined __APPLE__ && defined __MACH__ && \
++    __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1050   /* Mac OS X */
+ # include <libproc.h>
+ #endif
+ 
+@@ -265,7 +266,8 @@
+ 
+ #endif
+ 
+-#if defined __APPLE__ && defined __MACH__                   /* Mac OS X */
++#if defined __APPLE__ && defined __MACH__ && \
++    __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1050   /* Mac OS X */
+ 
+ # if defined PROC_PIDT_SHORTBSDINFO
+   struct proc_bsdshortinfo info;
