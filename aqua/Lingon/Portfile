@@ -16,7 +16,7 @@ long_description    Lingon is a graphical interface for creating launchd configu
 master_sites        sourceforge:lingon
 
 
-if {${os.major} < 8} {
+if {${os.major} < 9} {
 
     # use a fallback version for Tiger
 
